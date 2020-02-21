@@ -1,0 +1,5 @@
+*.gz
+svg-inkscape
+*.aux
+*.log
+*.out

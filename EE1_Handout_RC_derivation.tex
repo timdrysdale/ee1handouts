@@ -1,0 +1,113 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\sisetup{detect-all}
+\usepackage{svg}
+\usepackage[utf8x]{inputenc}
+%\usepackage[greek,english]{babel} 
+\usepackage{textcomp}
+\usepackage{textgreek}
+%\numberwithin{equation}{section}
+
+\newcommand{\uvec}[1]{{\bm{\hat{\textnormal{\bfseries #1}}}}}
+\newcommand{\ux}{\uvec{x}}
+\newcommand{\uy}{\uvec{y}}
+\newcommand{\uv}{\uvec{v}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\ua}{\uvec{a}}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+
+\makeatletter
+\providecommand\add@text{}
+\newcommand\tagaddtext[1]{%
+  \gdef\add@text{#1\gdef\add@text{}}}% 
+\renewcommand\tagform@[1]{%
+  \maketag@@@{\llap{\add@text\quad}(\ignorespaces#1\unskip\@@italiccorr)}%
+}
+\makeatother
+
+\title{EE1 Supplement: Series RC charging curve}
+\author{Professor Timothy Drysdale}
+\begin{document}
+\maketitle
+\begin{abstract}
+This material is not examinable in EE1, but provided so you know where the equations for RC charge (and discharge) curves come from.
+\end{abstract}
+
+\section{Problem description}
+An ideal voltage source $V_S$, resistor $R$ and capacitor $C$ are combined in a series circuit. We wish to calculate the time-dependent voltage across the capacitor $V_C(t)$ assuming it is initially uncharged 
+\begin{equation}
+\label{eq:initialvc}
+V_C(0) = 0\,V.
+\end{equation}
+\begin{marginfigure}
+\includesvg{RC}
+\end{marginfigure}
+The behaviour of the capacitor dominates the circuit, as it were, but the resistor plays a role in determining the rate of charge, and the supply voltage sets the final voltage to which the capacitor will eventually charge\sidenote{ i.e. it will always eventually reach the supply voltage, but can go no higher. It will finish charging at some $t$ that is a lot sooner than $t = \infty$, we hope! But we must get to the solution to find out when that is.}
+\begin{equation}
+\label{eq:finalvc}
+V_C(\infty) = V_S.
+\end{equation}
+Since all the voltages around a loop must sum to zero we can state that
+\begin{equation}
+V_S -V_R - V_C = 0 
+\end{equation}
+which can be rearranged to give the individual voltages in terms of the other two voltages, should we need them later.
+\begin{align}
+V_S & = V_R + V_C \label{eq:vs}\\
+V_R & = V_S - V_C \label{eq:vr}\\
+V_C & = V_S - V_R \label{eq:vc}\\
+\end{align}
+
+We are also interested in the time-dependent current through\sidenote{Voltages are \emph{across}, currents \emph{through}}  the resistor, $I_R(t)$. We find from Eqs.~\ref{eq:initialvc}~\&~\ref{eq:vr} that at $t=0$ that current is at its maximum to start with
+\begin{equation}
+I(0) = \frac{V_R}{R} = \frac{V_S-V_C}{R} = \frac{V_S-0}{R} = \frac{V_S}{R}
+\end{equation}
+while after charging we know from Eqs.~\ref{eq:finalvc}~\&~\ref{eq:vr} that the current is zero
+\begin{equation}
+I(\infty) = \frac{V_S-V_C}{R} = \frac{V_S-V_S}{R} = 0.
+\end{equation}
+
+Next we need to know the relationship between voltage and current in a capacitor, which can be expressed either as\sidenote{note that we are leaving this as an improper integral for now, for generality. We'll sort out limits later on.}
+\begin{equation}
+\label{eq:vinti}
+V_C = \frac{1}{C}\int I dt,
+\end{equation}
+or as
+\begin{equation}
+\label{eq:dqdt}
+I_C = \frac{dQ}{dt}.
+\end{equation}
+Bearing in mind that the charge $Q$ in a capacitor $C$ depends on the voltage
+\begin{equation}
+\label{eq:qcv}
+Q = CV
+\end{equation}
+we can develop Eq.~\ref{eq:dqdt} a bit further by substituting Eq.~\ref{eq:qcv} to give\sidenote{$C$ is constant so we can take it outside the derivative, as is conventional for this expression}
+\begin{equation}
+I_C = \frac{d(CV_C)}{dt} = C\frac{dV_C}{dt}.
+\end{equation}
+Things are simpler for the resistor, because it follows Ohm's Law\sidenote{it must make do with whatever potential difference (voltage) there is left between the supply voltage and the capacitor voltage, and set its current accordingly, and by extension the current flowing in the whole circuit.}
+\begin{equation}
+\label{eq:vrir}
+V_R = IR
+\end{equation}
+Now we have a choice of how to proceed to work out what happens between $t=0$ and $t=\infty$.  There is the standard first order linear differential method, or we can rearrange things somewhat and perform a simple integration. We'll start with the differential equation first.
+
+\section{First order linear differential equation method}
+
+We start by substituting Eqs.~\ref{eq:vrir}~\&~\ref{eq:vinti} into Eq.~\ref{eq:vs}
+\marginnote{\[V_C = \frac{1}{C}\int I dt\]
+\[V_S = V_R + V_C \]}
+
+ to begin setting up our differential equation
+\begin{equation}
+V_S = IR + \frac{1}{C}\int I dt
+\end{equation}
+
+
+
+\end{document}
