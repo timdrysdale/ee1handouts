@@ -1,0 +1,385 @@
+\documentclass{tufte-handout}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\sisetup{detect-all}
+\usepackage{svg}
+\usepackage[utf8x]{inputenc}
+%\usepackage[greek,english]{babel} 
+\usepackage{textcomp}
+\usepackage{textgreek}
+%\numberwithin{equation}{section}
+\usepackage{physics}%Re,Im not in fraktur
+\newcommand{\uvec}[1]{{\bm{\hat{\textnormal{\bfseries $#1$}}}}}
+\newcommand{\ux}{\uvec{x}}
+\newcommand{\uy}{\uvec{y}}
+\newcommand{\uv}{\uvec{v}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\ua}{\uvec{a}}
+%\DeclarePairedDelimiter\abs{\lvert}{\rvert}% %conflicts with physics
+\newcommand{\vac}{V_{ac}}%
+\newcommand{\iac}{I_{ac}}%
+\newcommand{\wt}{\omega{}t}
+
+\makeatletter
+\providecommand\add@text{}
+\newcommand\tagaddtext[1]{%
+  \gdef\add@text{#1\gdef\add@text{}}}% 
+\renewcommand\tagform@[1]{%
+  \maketag@@@{\llap{\add@text\quad}(\ignorespaces#1\unskip\@@italiccorr)}%
+}
+\makeatother
+
+\title{EE1 Two-element AC circuits}
+\author{Professor Timothy Drysdale}
+\begin{document}
+\maketitle
+
+%\begin{align}
+%\end{align}
+%\begin{equation}
+%\end{equation}
+
+\begin{abstract}
+\noindent
+We analyse the following ac circuits
+\begin{itemize}
+\item series RC
+\item series RL
+\item parallel RC
+\item parallel RL
+%\item two series voltage sources
+%\item series LC
+\end{itemize}
+\end{abstract}
+
+\section{Series RC}
+
+\begin{marginfigure}
+\includesvg{seriesRC}
+\caption{Series RC circuit}
+\label{fig:seriesRC}
+\end{marginfigure}
+
+Let 
+\begin{align}
+\omega &= 200\pi \\
+\vac & = 200e^{jwt}\\
+R &= 100\Omega \\
+C &= 20\mu F 
+\end{align}
+
+\subsection{What else do we know? }
+\begin{itemize}
+\item \[Z_C = \frac{1}{j\omega C}\]
+\item \[ V = IZ \]
+\item voltages around a loop must sum to zero, at all times
+\item the same current flows in all components of a simple series circuit
+
+\end{itemize}
+
+\subsection{What do we \emph{no}t know?}
+\begin{itemize}
+\item the current flowing in the resistor
+\item the current flowing in the capacitor
+\item the current flowing in the supply
+\end{itemize}
+
+One approach is to calculate the total impedance of the circuit at a single frequency, and do all the book work numerically at a single frequency.
+\begin{align}
+Z_T &= Z_R + Z_C \\ 
+& = R + \frac{1}{j\omega C} \\
+& = 100 - j80
+\end{align}
+Then we can calculate the current \marginnote{we multiply by the complex conjugate $(100+j80)$ to make the deonominator real}
+\begin{align}
+\iac &= \frac{V}{Z_T}
+ \frac{200}{100-j80}\\
+&= \frac{200(100+j80)}{(100-j80)(100+j80)}\\
+& = \frac{20\times10^3+j16\times10^3}{10\times10^3 + 6.4\times10^3} \\
+& = 1.22 + j0.98 A
+\end{align}
+Note that we drop the exponential part of the voltage for convenience. We know it is there, and we'll add it back in later.
+What does out result mean? We still need to work out the magnitude $\abs{\iac}$ and phase $\angle{\iac}$. The magnitude is
+\begin{align}
+\abs{\iac} &= \abs{1.22 + j0.98} \\
+&= \sqrt{1.22^2 + 0.98^2} \\
+&= 1.56 A.
+\end{align}
+
+We can double check our value for $\iac$ by calculating the magnitude of the impedance first
+\begin{align}
+\abs{\iac} &= \frac{V}{\abs{Z_T}} \\
+&= \frac{200}{\sqrt{100^2 + 80^2}} \\
+& = \frac{200}{128.1} \\
+& = 1.56A
+\end{align}
+which is the same as before.
+
+The phase is
+\begin{align}
+\angle{\iac} &= \arctan{\frac{\Im{\iac}}{\Re{\iac}}} \\
+&= \arctan{\frac{0.98}{1.22}}  \\
+&= \SI{38.8}{\degree}
+\end{align}
+
+We can see the results on a phasor diagram of Figure~\ref{fig:seriesRCphasor}.  This is only a qualitative representation - you do not need to draw the phasors to scale in the exam because you will be drawing the phasor diagram \emph{before} you've worked out any values!
+\begin{marginfigure}
+\includesvg{seriesRCphasor}
+\caption{Series RC circuit phasor diagram}
+\label{fig:seriesRCphasor}
+\end{marginfigure}
+
+That's a basic solution done and dusted. Although it is often far far better to be able to work out the result for the general case, and substitute in numbers as you need them - especially while you are building your knowledge of how these circuits work.
+
+So let's calculate the current for any frequency and voltage
+
+\begin{align}
+\iac & = \frac{V}{Z_T} \\
+& = \frac{V}{R + \frac{1}{j\omega C}}\\
+& = \frac{jV\omega C}{1 + j\omega RC} 
+\end{align}
+
+The magnitude of the current is
+\begin{align}
+\abs{I} & = \abs{\frac{jV\omega C}{1 + j\omega RC}} \\
+&= \frac{\abs{jV\omega C}}{\abs{1 + j\omega RC}} \\
+& = \frac{V\omega C}{1 + (\omega R C)^2} 
+\end{align}
+
+To find the phase of the current, we need to first make the deonominator real so we can separate out the real and imaginary parts. We multiply by the complex conjugate
+\begin{align}
+\iac &= \frac{jV\omega C}{1 + j\omega RC}\frac{1-j\omega RC}{1-j\omega RC} \\
+& = \frac{V\omega C(1j - \omega RC)}{1+(\omega RC)^2}\\
+\end{align}
+Now the phase can be found as 
+\begin{align}
+\angle{\iac} &= \arctan{\frac{\Im{\iac}}{\Re{\iac}}} \\
+&= \arctan{\frac{1}{-\omega RC}}
+\end{align}
+
+We can check these equations by substituting in the parameters and checking we get the same answers as before.
+
+
+
+%
+%& = \frac{j200.200\pi.20\times10^-6}{1+j200\pi.100.20\times10^{-6}}
+%
+%
+%
+%& = \frac{200.200\pi.20\times 10^{-6}}{1 + (200 \pi.100.20\times10^{-6})^2} \\
+%& = 
+%\end{align}
+
+%
+%series and parallel RC and RL circuits.
+%We start from first principles by dividing voltage by current to find the impedance of a resistor ($Z_R$), capacitor ($Z_C$) and inductor ($Z_L$) as
+%\begin{align*} 
+%Z_R &= R, \\
+%Z_C &= \frac{1}{j\omega C}, \\
+%Z_L &= j\omega L.
+%\end{align*}
+%\end{abstract}
+%
+%\section{Resistor}
+%
+%We begin with a resistor so as to show the pattern of our analysis with a familiar and straightforward component. Given an ac voltage:
+%\begin{equation}
+%\vac = A_0e^{j\omega t} \label{eq:v}
+%\end{equation}
+%where $A_0$ is the magnitude,\sidenote{The magnitude of  $\Re(A_0e^{j\wt})=A_0\cos{\wt}$ is $A_0$, but the peak-to-peak difference is $A_0-(-A_0)=2A_0$ }
+%$\omega$ is the radian frequency, and $t$ is time in seconds, then we can find the ac current $\iac$ using a rearranged form of Ohm's law
+%\begin{align}
+%\iac &= \frac{\vac}{R}\\
+%&=\frac{A_0e^{j\omega t}}{R}.
+%\end{align}
+%And, fairly trivially, if we compare\sidenote{we put voltage on the top line because the definition of the impedance $Z$ of a component is \[Z = \frac{V}{I}\]} the voltage and current waveforms we find they differ only by a factor of $R$ as we would expect
+%\begin{align}
+%\frac{\vac}{\iac} &= \frac{A_0e^{j\omega t}}{\frac{A_0e^{j\omega t}}{R}} \\
+%&= R.
+%\end{align}
+%Since the impedance is defined as the ratio of voltage to current
+%\begin{equation}
+%Z = \frac{\vac}{\iac} \label{eq:imp}
+%\end{equation}
+% we can say that
+%\begin{equation}
+%\boxed{Z_R= R.}
+%\end{equation}
+%%so we know that whenever the voltage is at a maximum, so is the current. One might be bigger than the other if $R\neq0$, but at least we know they will always wiggle at the same time, i.e. they're "in-phase" with each other. \sidenote{When you multiply an exponential function by a real number, you're just changing the mangitude of the output of the exponential function - you are not affecting the input to it, and it's the input that controls the phase. But stay tuned for what happens when we multiply by a complex number....} 
+%
+%\section{Capacitor}
+%We repeat the process for a capacitor, starting from our knowledge that the voltage $V$ and charge $Q$ in a capacitor are related by
+%\begin{equation}
+%Q = CV
+%\label{eq:qcv}
+%\end{equation}
+%where $Q$ is the total charge in Coulombs, and $C$ is the capacitance in Farads. The only time a current can flow in the terminal wires of a capacitor is when the total charge is changing\sidenote{$Q$ tells us the total charge of the capacitor, although we are not actually storing charges; instead we are pushing charges onto, or pulling them off, the plates such that one plate becomes positively charged to $+Q$ and the other plate becomes negatively charged to $-Q$. The energy is stored in the attractive force between the opposite charges on each plate, which stay separated because charges cannot hop the gap between the plates - unless the dielectric breaks down, which only happens at high voltages, e.g. $\SI{3}{\volt\per\micro\meter}$ for air. As a general rule, we avoid analysing lightning in this course, so you can ignore that possibility.}, and since we know that current involves the transport of charge it is not surprising that the current at any instant is exactly qual to the rate of change of charge
+%\begin{equation}
+%\frac{dQ}{dt} = I.
+%\label{eq:dqdt}
+%\end{equation}
+%We'd like to get $I$ into Eq.~\ref{eq:qcv}, so we take the time derivative of both sides of Eq.~\ref{eq:qcv}
+%\begin{align}
+%\frac{d}{dt}[Q]&=\frac{d}{dt}\left[ CV\right] \\
+%\frac{dQ}{dt}&=C\frac{dV}{dt} \label{eq:dqcv}
+%\end{align}
+%where $C$ can go outside the derivative because $C$ is constant with time for a standard capacitor - it's dimensions are usually mechanically defined and unchanging.\sidenote{Technically, there \emph{are} some capacitors which vary with time, such as pressure sensors that rely on using a flexible plate that deforms under load, but even for those, the rate of change of C with time is usually much slower than the rate of change of V with time, so you would still pull this same trick. }
+%We substitute Eq.~\ref{eq:dqdt} into Eq.~\ref{eq:dqcv} to obtain a relationship between current and voltage
+%\begin{equation}
+%I = C\frac{dV}{dt}.
+%\end{equation}
+%We substitute in our same voltage as before from Eq.~\ref{eq:v} to get the current as
+%\begin{align}
+%\iac &= C\frac{d}{dt}\left[ \vac \right] \\
+% &= C\frac{d}{dt}\left[  A_0e^{j\wt} \right] \\
+% &= CA_0\frac{d}{dt}\left[e^{j\wt} \right] \\
+%&= j\omega CA_0 e^{j\wt}.
+%\end{align}
+%The impedance $Z_c$ of the capacitor is
+%\begin{align}
+%Z_c &= \frac{\vac}{\iac} \\
+%&= \frac{A_0e^{j\omega t}}{j\omega CA_0 e^{j\wt}},
+%\end{align}
+%thus giving us the result that
+%\begin{equation}
+%\boxed{Z_c= \frac{1}{j\omega C}.}
+%\end{equation}
+%
+%\section{Inductor}
+%
+%We repeat the analysis again, starting from our knowledge that an inductor generates a voltage whenever the current changes\sidenote{the inductor does this in an ultimately doomed, but sometimes exciting, attempt to resist any change in its magnetic flux - remember to apply a flyback diode when using semiconductor switches on inductive loads in a real circuit because they can damage the switch.}
+%\begin{equation}
+%V = L\frac{dI}{dt}.
+%\end{equation}
+%Since we want to start from voltage and calculate current, to follow the same pattern as before, we must integrate
+%\begin{align}
+%\int V dt & = \int L \frac{dI}{dt} dt \\
+%	 & = L \int \frac{dI}{dt} dt \\
+%& = LI + K
+%\end{align}
+%where $K$ is a constant of integration. We can let $K = 0$ because there is no dc offset\sidenote{If there was a DC offset in a circuit, then we would separate the problem into two parts, one part dealing with the dc offset (where $\omega = 0$), and the other part dealing with the ac signal at some single frequency ($\omega > 0$). If it were even more complicated, and there were multiple frequencies, we'd just deal with them one by one. If it started to get crazy, like a square wave, with lots of frequencies, then we'd probably using a frequency domain technique (such as Fourier analysis) to speed things up - but you needn't worry about that in EE1. Back to the task in hand - analysis at a single frequency - the frequency $\omega$ we defined in Eq.~\ref{eq:v} \emph{includes} zero frequency, so our analysis will be valid for dc, i.e.  in the limit that $\omega \to 0$, and for $ac$, so we are totally legit to set $K = 0$ to find the general case for the impedance at a single frequency $\omega$. } in our signal in this ac analysis at a single frequency $\omega$, hence 
+%\begin{equation}
+%I = \frac{1}{L}\int V dt. \label{eq:li}
+%\end{equation}.
+%We substitute Eq.~ref{eq:v} into Eq.~ref{eq:li} and do the integration as follows
+%\begin{align}
+%\iac & = \frac{1}{L}\int \vac dt \\
+%&=  \frac{1}{L}\int A_0e^{j\omega t} dt \\
+%&= \frac{1}{j\omega L}A_0e^{j\omega t} + K \\
+%&= \frac{1}{j\omega L}A_0e^{j\omega t} 
+%\end{align}
+%where once again the constant of integration $K=0$ because there is no dc component in our signal. Hence the impedance is 
+%\begin{align}
+%Z &= \frac{\vac}{\iac}\\
+%&=\frac{A_0e^{j\omega t}}{\frac{1}{j\omega L}A_0e^{j\omega t} }  
+%\end{align}
+%which simplifies, by removing common factors, to 
+%\begin{equation}
+%\boxed{Z_L = j\omega L.}
+%\end{equation}
+%
+%We have now derived the (complex) impedances of resistors, capacitors and inductors.
+%
+%\section{Impedance}
+%As we have seen in the preceeding sections, the impedance $Z$ can be purely real, for a resistor, or purely imaginary, for a capacitor or inductor. There are other cases where we might encounter mixed components that comprise both a resistive element, and some element of capacitance or inductance. Thus we tend to think of impedance being a complex number. In the general case, both the real and imaginary parts may be non-zero, i.e.
+%\begin{equation}
+%Z = R \pm jX.\label{eq:z}
+%\end{equation}
+%where $X$ is the reactance of the capacitance ($X_C$) or inductance ($X_L$).\sidenote{since we are dealing with the general case, it's possible we have a combination of components. When that happens, it is more precise to talk about the inductance rather than the inductor - it might not be an inductor, but whatever it is, might have some inductance. Same goes for the capacitance. This is not an essential distinction to make, but you will find it transmits a better impression to experienced engineers if you master this subtlety in your communications.}
+%
+%You'll note the $\pm$ symbol in Eq.~\ref{eq:z}.  Why do we have that? That's there because when we are talking about reactances on their own, we usually don't care about the phase information that is contained in the $\pm j$ so we just leave that bit out altogether, like
+%\begin{align}
+%X_C &= \frac{1}{\omega C} \\
+%X_L &= \omega L.
+%\end{align}
+%If phase matters, use impedance ($Z$). If only magnitude matters, use reactance ($X$).\sidenote{Nothing is ever really that simple in life, so let me add a qualifier - if you have more than one component in a circuit, then even just to calculate the overall magnitude of something in the circuit, you have to keep track of all the phases when you add things up. Beware! Many examples will follow in lectures and tutorial questions.}
+%Note that the magnitude of the impedance $Z = R \pm jX$ is 
+%\begin{equation}
+%\abs{Z} = \sqrt{R^2 + X^2}
+%\end{equation}
+%and that it has a phase angle of
+%\begin{equation}
+%\angle{Z} = \arctan{\frac{\Im{Z}}{\Re{Z}}}
+%\end{equation}
+%such that 
+%\begin{equation}
+%\angle{\vac} = \angle{Z} + \angle{\iac}\label{eq:phaseoffset}
+%\end{equation}
+%
+%\section{Phase relationship between voltage and current in components}
+%\subsection{Resistor}
+%We can use Eq.~\ref{eq:phaseoffset} to help us interpret what the impedance is telling us about the phase relationship between $\vac$ and $\iac$. For the resistor
+%\begin{align}
+%\angle{Z} &= \arctan{\frac{0}{R}}\\
+%& = \arctan{0} \\
+%&= 0
+%\end{align}
+%therefore
+%\begin{equation}
+%\angle{\vac} = \angle{\iac}
+%\end{equation}
+%or in other words, the voltage and current in a resistor are in phase.
+%
+%\subsection{Capacitor}
+%For a capacitor the situation is a little more complicated. We have a $j$ on the bottom line, so we need to get it onto the top line. 
+%We know\sidenote{
+%\[\frac{1}{j}\times\frac{j}{j} = \frac{j}{j^2} = \frac{j}{-1} = -j\]
+%} that $\frac{1}{j} = -j$ so 
+%\begin{align}
+%\angle{Z} & = \arctan{\frac{\frac{-1}{wC}}{0}}\\
+%& = \arctan{\frac{-1}{0}}\\
+%& = \arctan{-\infty}\\
+%& = -\frac{\pi}{2}
+%\end{align}
+%therefore
+%\begin{equation}
+%\angle{\vac} = -\frac{\pi}{2} + \angle{\iac}
+%\end{equation}
+%or in other words, the current leads the voltage by $\frac{\pi}{2}$. 
+%
+%\noindent\fbox{%
+%    \parbox{\textwidth}{%	
+%	\begin{center}
+%        In a {\bf \Huge C}apacitor, the current {\bf \Huge I} leads the {\bf \Huge V}oltage ...
+%    \end{center}
+%}%
+%}
+%
+%\subsection{Inductor}
+%For an inductor 
+%\begin{align}
+%\angle{Z} & = \arctan{\frac{wL}{0}}\\
+%& = \arctan{\frac{1}{0}}\\
+%& = \arctan{\infty}\\
+%& = \frac{\pi}{2}
+%\end{align}
+%therefore
+%\begin{equation}
+%\angle{\vac} = +\frac{\pi}{2} + \angle{\iac}
+%\end{equation}
+%or in other words, the voltage leads the current by $\frac{\pi}{2}$. 
+%
+%\noindent\fbox{%
+%    \parbox{\textwidth}{%	
+%\begin{center}
+%       ... the {\bf \Huge V}oltage leads the current {\bf \Huge I} in an inductor {\bf \Huge L} 
+%    \end{center}
+%}%
+%}
+%
+%\subsection{Mnemonic}
+%
+%Combining our two bits of knowledge about phase relationships in inductors and capacitors, we get the mnemonic
+%
+%\noindent\fbox{%
+%    \parbox{\textwidth}{%
+%	\begin{center}
+%{\bf \Huge CIVIL} 
+%\end{center}
+%    }%
+%}
+
+\end{document}
