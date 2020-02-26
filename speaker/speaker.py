@@ -105,11 +105,12 @@ if __name__ == "__main__":
     IL1 = VC / ZL1
     Icheck = IC+IR1+IL1
 
-    names = ["ZT","Vamp","Vsource","Vspeaker","VC","VR0","VL0","IT","IR1","IC","IL1","Icheck"]
+    names = ["ZT","Vamp","Vsrc","Vspkr","VC","VR0","VL0","IT","IR1","IC","IL1","Icheck"]
     values = [ZT,Vamp,Vsource,Vspeaker,VC,VR0,VL0,IT,IR1,IC,IL1,Icheck]
-    print("parameter \t magnitude \t phase\n")
-    for name, value in zip(names,values):
-        print("%s \t %f \t %f"%(name, np.abs(value), np.angle(value)*180/np.pi))
+    units = ["Ω","V","V","V","V","V","V","A","A","A","A","A"]
+    print("param \t mag    unit \t phase(deg)\n")
+    for name, value , unit in zip(names,values, units):
+        print("%s \t %1.4f %s \t %4.1f"%(name, np.abs(value), unit, np.angle(value)*180/np.pi))
 
     plt.figure()
     plt.ylim([-0.2,0.5])
